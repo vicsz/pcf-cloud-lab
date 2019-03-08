@@ -181,13 +181,165 @@ mvnw.cmd test
 ```
 
 
-## 2 - WebApplication on PCF
+## 2 - Server side rendering with Thymeleaf and Bootstrap CSS
+
+Key points:
+* Server side vs Client side rendering 
+* Html templating 
+* Webjars 
+
+### 2.1 - Change your helloworld controller to use the /hello path instead of / (in HelloWorldController.java)
+
+```java
+@RestController
+public class HelloWorldController {
+
+    @RequestMapping("/hello")
+    public String index(){
+        return "Hello world";
+    }
+}
+```
+
+Also fix your now broken tests (in HelloWorldControllerTests.java):
+
+```java
+
+@Test
+public void testHelloWorld(){
+    String body = restTemplate.getForObject("/hello",String.class);
+
+    assertThat(body).contains("Hello world");
+}
+    
+```
+
+Verify your test is not breaking:
+
+From the commandline you can run them with:
+
+```sh
+./mvwn test
+```
+
+On Windows machines:
+
+```sh
+mvnw.cmd test
+```
+
+### 2.2 - Add the Spring Boot Thymeleaf and Bootstrap dependencies to your build script (pom.xml).
+
+```xml
+<dependencies>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- thymeleaf -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    
+    <!-- boot strap css -->
+    <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap</artifactId>
+        <version>4.3.1</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    
+</dependencies>
+```
+
+### 3.3 - Add a IndexController 
+
+
+```java
+package com.example.demo;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class IndexController {
+
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("message", "Hello world !!!");
+
+        return "index";
+    }
+
+```
+
+### 2.4 - Add an index.html template in the resources/templates directory.
+
+```html
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Spring Boot Thymeleaf Hello World Example</title>
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.3.1/css/bootstrap.min.css}"/>
+</head>
+
+<body>
+
+    <div class="container" style="padding: 16px 16px;">
+        <div class="row">
+            <div class=".col-md-3 .offset-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h2>Message</h2></div>
+                    <div class="panel-body">
+                        <p th:text="${message}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+
+
+```
+
+
+### 2.5 - Run the application
+
+> NOTE: Maven instructions are for Bash/Linux/MacOS ... for Windows , replace calls to *./mvnw* with *mvnw.cmd*
+
+```sh
+./mvnw spring-boot:run
+```
+
+On Windows machines:
+
+```sh
+mvnw.cmd spring-boot:run
+```
+
+Verify in your browser that localhost:8080 works. 
+
+
+## 3 - WebApplication on PCF
 
 Key points:
 * Deploying to PCF
 * Scaling in PCF
 
-### 2.1 - Login into the PCF instance that you are using (if required)
+### 3.1 - Login into the PCF instance that you are using (if required)
 
 ```sh
 cf login -a ENTER_API_URL_HERE
@@ -197,7 +349,7 @@ cf login -a ENTER_API_URL_HERE
 
 Enter your Username and Password.
 
-### 2.2 - Deploy your application to PCF
+### 3.2 - Deploy your application to PCF
 
 ```sh
 cf push cloud-lab -p target/demo-0.0.1-SNAPSHOT.jar
@@ -218,7 +370,7 @@ This will automatically create a new application in your default PCF development
 
 Note that PCF will automatically detect that this is a Java application, and use the appropriate *BuildPack*.
 
-### 2.3 - Login into the PCF portal to view your newly deployed / created application
+### 3.3 - Login into the PCF portal to view your newly deployed / created application
 
 If you are using Pivotal Web Services, the portal is at:
 
@@ -228,9 +380,9 @@ Click through to your app by selecting the default space and org.
 
 Your route to the application (URL) will be presented besides your application.
 
-### 2.4 - Test the / endpoint at this route <ROUTE>/
+### 3.4 - Test the / endpoint at this route <ROUTE>/
 
-### 2.5 - Scale the App
+### 4.5 - Scale the App
 
 Either provision more instances or more space.
 

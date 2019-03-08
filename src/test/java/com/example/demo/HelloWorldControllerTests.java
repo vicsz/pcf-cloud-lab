@@ -18,7 +18,7 @@ public class HelloWorldControllerTests {
 
     @Test
     public void testHelloWorld(){
-        String body = restTemplate.getForObject("/",String.class);
+        String body = restTemplate.getForObject("/hello",String.class);
 
         assertThat(body).contains("Hello world");
     }
