@@ -11,6 +11,10 @@ Cloud Native Lab - Simple Workshop demonstrating Cloud-Native development with S
 
 ## PCF
 
+* Deployment
+* Scaling / Auto-Scaling
+
+
 ## PCF
 
 ## Prerequisites
@@ -176,3 +180,66 @@ On Windows machines:
 mvnw.cmd test
 ```
 
+
+## 2 - WebApplication on PCF
+
+Key points:
+* Deploying to PCF
+* Scaling in PCF
+
+### 2.1 - Login into the PCF instance that you are using (if required)
+
+```sh
+cf login -a ENTER_API_URL_HERE
+```
+
+*Note: ENTER_API_URL_HERE will be provided to you*
+
+Enter your Username and Password.
+
+### 2.2 - Deploy your application to PCF
+
+```sh
+cf push cloud-lab -p target/demo-0.0.1-SNAPSHOT.jar
+```
+
+*cloud-lab* will represent a unique name of your running application on PCF.  This can be something more unique like : cloud-lab-your-initials. You may run into chalenges if someone else has already used this unique name in which case use something else.  The error that you would see if this is the case: 
+
+> _The app cannot be mapped to route demo.cfapps.io because the route exists in a different space._   
+
+.. if that is the case going forward ALWAYS use a different application name and try something like: 
+
+```sh
+cf push cloud-lab-john-smith -p target/demo-0.0.1-SNAPSHOT.jar
+```
+
+
+This will automatically create a new application in your default PCF development space, with the specific jar artifact deployed.
+
+Note that PCF will automatically detect that this is a Java application, and use the appropriate *BuildPack*.
+
+### 2.3 - Login into the PCF portal to view your newly deployed / created application
+
+If you are using Pivotal Web Services, the portal is at:
+
+https://run.pivotal.io
+
+Click through to your app by selecting the default space and org.
+
+Your route to the application (URL) will be presented besides your application.
+
+### 2.4 - Test the / endpoint at this route <ROUTE>/
+
+### 2.5 - Scale the App
+
+Either provision more instances or more space.
+
+This can be done via the command line or via the GUI.
+
+To scale up to 2 instances:
+
+```sh
+cf scale cloud-lab -i 2
+```
+
+Via the GUI observe additional instances being spun up.
