@@ -12,15 +12,25 @@
     <div class="container" style="padding: 16px 16px;">
         <div class="row">
             <div class=".col-md-3 .offset-md-3">
+
                 <div class="panel panel-default">
                     <div class="panel-heading"><h2>Message</h2></div>
                     <div class="panel-body">
                         <p th:text="${message}"></p>
                     </div>
                 </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h2>PCF Info</h2></div>
+                    <div class="panel-body">
+                        <p th:text="'Application name: ' + ${applicationName}"></p>
+                        <p th:text="'Space name: ' + ${spaceName}"></p>
+                        <p th:text="'Unique instance id: ' + ${instanceId}"></p>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-    </div>
 </body>
 </html>

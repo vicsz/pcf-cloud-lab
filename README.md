@@ -2,6 +2,8 @@
 
 Cloud Native Lab - Simple Workshop demonstrating Cloud-Native development with Spring Boot and Pivotal Cloud Foundry.
 
+>> WORK IN PROGRESS -- update of cloud-lab repo -- but with templating examples. 
+
 # Items covered:
 
 ## Spring Boot
@@ -338,6 +340,7 @@ Verify in your browser that localhost:8080 works.
 Key points:
 * Deploying to PCF
 * Scaling in PCF
+* VCAP variables 
 
 ### 3.1 - Login into the PCF instance that you are using (if required)
 
@@ -382,7 +385,7 @@ Your route to the application (URL) will be presented besides your application.
 
 ### 3.4 - Test the / endpoint at this route <ROUTE>/
 
-### 4.5 - Scale the App
+### 3.5 - Scale the App
 
 Either provision more instances or more space.
 
@@ -395,3 +398,83 @@ cf scale cloud-lab -i 2
 ```
 
 Via the GUI observe additional instances being spun up.
+
+### 3.6 - Show PCF information in your index page
+
+Update your IndexController:
+
+```java
+@Controller
+public class IndexController {
+
+    @Value("${vcap.application.name:localMachine}")
+    private String applicationName;
+
+    @Value("${vcap.application.space_name:localSpace}")
+    private String spaceName;
+
+    @Value("${vcap.application.instance_id:localInstanceId}")
+    private String instanceId;
+
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("message", "Hello world !!!");
+        model.addAttribute("applicationName", applicationName);
+        model.addAttribute("spaceName", spaceName);
+        model.addAttribute("instanceId", instanceId);
+
+        return "index";
+    }
+
+}
+
+
+
+```
+
+Update your index.html template:
+
+```html
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Spring Boot Thymeleaf Hello World Example</title>
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.3.1/css/bootstrap.min.css}"/>
+</head>
+
+<body>
+
+    <div class="container" style="padding: 16px 16px;">
+        <div class="row">
+            <div class=".col-md-3 .offset-md-3">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h2>Message</h2></div>
+                    <div class="panel-body">
+                        <p th:text="${message}"></p>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h2>PCF Info</h2></div>
+                    <div class="panel-body">
+                        <p th:text="'Application name: ' + ${applicationName}"></p>
+                        <p th:text="'Space name: ' + ${spaceName}"></p>
+                        <p th:text="'Unique instance id: ' + ${instanceId}"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+</body>
+</html>
+```
+
+
+Build and redeploy to PCF. Hit the homepage URL and note the PCF information.
+
+This includes Round Robin load balancing when you have multiple instances running.
