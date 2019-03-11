@@ -292,25 +292,26 @@ public class IndexController {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Cache-Control" content="no-store" />
     <title>Spring Boot Thymeleaf Hello World Example</title>
-    <link rel="stylesheet" th:href="@{webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
-
 <body>
 
     <div class="container" style="padding: 16px 16px;">
-        <div class="row">
-            <div class=".col-md-3 .offset-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h2>Message</h2></div>
-                    <div class="panel-body">
-                        <p th:text="${message}"></p>
+            <div class="row">
+                <div class=".col-md-3 .offset-md-3">
+    
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h2>Message</h2></div>
+                        <div class="panel-body">
+                            <p th:text="${message}"></p>
+                        </div>
                     </div>
+    
                 </div>
             </div>
         </div>
-
-    </div>
 </body>
 </html>
 
@@ -416,18 +417,21 @@ public class IndexController {
     @Value("${vcap.application.instance_id:localInstanceId}")
     private String instanceId;
 
+    @Value("${vcap.application.instance_index:localInstanceIndex}")
+    private String instanceIndex;
+
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("message", "Hello world !!!");
         model.addAttribute("applicationName", applicationName);
         model.addAttribute("spaceName", spaceName);
         model.addAttribute("instanceId", instanceId);
+        model.addAttribute("instanceIndex", instanceIndex);
 
         return "index";
     }
 
 }
-
 
 
 ```
@@ -441,10 +445,10 @@ Update your index.html template:
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Cache-Control" content="no-store" />
     <title>Spring Boot Thymeleaf Hello World Example</title>
-    <link rel="stylesheet" th:href="@{webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
-
 <body>
 
     <div class="container" style="padding: 16px 16px;">
@@ -464,11 +468,13 @@ Update your index.html template:
                         <p th:text="'Application name: ' + ${applicationName}"></p>
                         <p th:text="'Space name: ' + ${spaceName}"></p>
                         <p th:text="'Unique instance id: ' + ${instanceId}"></p>
+                        <p th:text="'Instance Index: ' + ${instanceIndex}"></p>
                     </div>
                 </div>
 
             </div>
         </div>
+    </div>
 
 </body>
 </html>

@@ -17,12 +17,16 @@ public class IndexController {
     @Value("${vcap.application.instance_id:localInstanceId}")
     private String instanceId;
 
+    @Value("${vcap.application.instance_index:localInstanceIndex}")
+    private String instanceIndex;
+
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("message", "Hello world !!!");
         model.addAttribute("applicationName", applicationName);
         model.addAttribute("spaceName", spaceName);
         model.addAttribute("instanceId", instanceId);
+        model.addAttribute("instanceIndex", instanceIndex);
 
         return "index";
     }
