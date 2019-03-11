@@ -250,7 +250,7 @@ mvnw.cmd test
     <dependency>
         <groupId>org.webjars</groupId>
         <artifactId>bootstrap</artifactId>
-        <version>4.3.1</version>
+        <version>3.3.7</version>
     </dependency>
 
     <dependency>
@@ -293,7 +293,7 @@ public class IndexController {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Spring Boot Thymeleaf Hello World Example</title>
-    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.3.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
 </head>
 
 <body>
